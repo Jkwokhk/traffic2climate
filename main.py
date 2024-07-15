@@ -2,9 +2,9 @@ from keys import eia_key
 import matplotlib as plt
 import requests
 import json
+import pandas as pd
 # EIA DATA for CO2 emission
 eia_key = eia_key
-
 offset, limit = 0, 5000
 all_data = []
 emissions_by_year_state = {}
@@ -36,5 +36,6 @@ while True:
 eia_output_file = "emissions_data.json"
 with open(eia_output_file, "w") as f:
     json.dump(emissions_by_year_state, f, indent = 4)
+
 
 
