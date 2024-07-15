@@ -1,6 +1,6 @@
 import pandas as pd
 import json
-rows =  [1,2,3,4,5,6,7,18,19,21,29,30,43,44,53,54,67,68,69,70,71] 
+rows =  [1,2,3,4,5,6,7,17,18,20,28,29,42,43,52,53,67,68,69,70,71] 
 cols = [0,4]
 all_data = {}
 state_abbreviations = {
@@ -19,10 +19,12 @@ xl_files = [f'traffic_data/{year[-2:]}dectvt.xls' for year in map(str, range(200
 for file_name in xl_files:
     year = file_name.split('/')[1][:2]
     dfs = pd.read_excel(file_name, sheet_name='Page 4', skiprows=rows, usecols= cols, header= None)
-    dfs[0] = dfs[0].map(state_abbreviations)
-    
+    dfs = dfs.dropna()
+    dfs = dfs.rename(columns={4:'Vehicle-Miles(Millions)' , 0:'States'})
+    dfs['States'] = dfs['States'].map(state_abbreviations)
     data = dfs.to_dict(orient='records')
     all_data[year] = data
+    print(dfs.head())
     
 with open('traffic_data.json', 'w') as f:
     json.dump(all_data, f, indent=4)
