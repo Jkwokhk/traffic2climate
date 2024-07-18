@@ -19,16 +19,17 @@ while True:
             print("ENDED")
             break
         for item in eia_data["response"]["data"]:
-            year = item["period"]
-            print(year)
-            state = item["stateId"]
-            # CO2 metric tons
-            emissions = float(item["emissions"])
-            if year not in emissions_by_year_state:
-                emissions_by_year_state[year] = {}
-            if state not in emissions_by_year_state[year]:
-                emissions_by_year_state[year][state] = 0
-            emissions_by_year_state[year][state] += emissions
+            year = int(item["period"])
+            if year >= 2008:
+                # print(year)
+                state = item["stateId"]
+                # CO2 metric tons
+                emissions = float(item["emissions"])
+                if year not in emissions_by_year_state:
+                    emissions_by_year_state[year] = {}
+                if state not in emissions_by_year_state[year]:
+                    emissions_by_year_state[year][state] = 0
+                emissions_by_year_state[year][state] += emissions
         offset+=limit
     else:
         print(f"Error {response.status_code}")

@@ -24,7 +24,7 @@ for file_name in xl_files:
     dfs['States'] = dfs['States'].map(state_abbreviations)
     data = dfs.to_dict(orient='records')
     all_data[year] = data
-    print(dfs.head())
+    # print(dfs.head())
     
 with open('traffic_data.json', 'w') as f:
     json.dump(all_data, f, indent=4)
