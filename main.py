@@ -23,6 +23,9 @@ while True:
             if year >= 2008:
                 # print(year)
                 state = item["stateId"]
+                #  Skips District of Columbia since it is not technically a state
+                if state == "DC":
+                    continue
                 # CO2 metric tons
                 emissions = float(item["emissions"])
                 if year not in emissions_by_year_state:

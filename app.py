@@ -1,19 +1,25 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats
 
 # For convenience purposes I will only compare data between California and Wyoming
 traffic_data = pd.read_json('traffic_data.json')
 ca_traffic_data = {}
 wy_traffic_data = {}
+all_traffic_data = []
+
 for year, records in traffic_data.items():
+    
     for record in records:
         state = record['States']
         volume = record['Vehicle-Miles(Millions)']
+        all_traffic_data.append(volume)
         if state == 'CA':
             ca_traffic_data[year] = volume
         if state == 'WY':
             wy_traffic_data[year] = volume
+
 
 ca_traffic_sorted = sorted(ca_traffic_data.items())
 wy_traffic_sorted = sorted(wy_traffic_data.items())
@@ -38,16 +44,24 @@ plt.tight_layout()
 emissions = pd.read_json('emissions_data.json')
 ca_emissions = {}
 wy_emissions = {}
+all_emissions = []
+
 for year, records in emissions.items():
+
     if "CA" in records:
         ca_emissions[year] = records["CA"]
     if "WY" in records:
         wy_emissions[year] = records["WY"]
+    for record in records:
+        all_emissions.append(record)
+
+
+
+
 
 ca_co2_sorted = sorted(ca_emissions.items())
 wy_co2_sorted = sorted(wy_emissions.items())
-print(ca_co2_sorted)
-print(wy_co2_sorted)
+
 ca_year, ca_emi = zip(*ca_co2_sorted)
 wy_year, wy_emi = zip(*wy_co2_sorted)
 plt.figure(figsize=(10, 6))
@@ -60,14 +74,23 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
+
 #  creating scatterplot to see relationship between traffic volume and CO2 emission
+
+all_emissions_sorted = sorted(all_emissions)
+all_traffic_data_sorted = sorted(all_traffic_data)
+
 plt.figure(figsize=(10, 6))
-plt.scatter(wy_emi, wy_volumes, label='WY', color='green')
-plt.scatter(ca_emi, ca_volumes, label='CA', color='blue')
+plt.scatter(all_emissions_sorted, all_traffic_data_sorted, label='All States')
+
 plt.xlabel('Traffic Volume (Vehicle-Miles in Millions)')
 plt.ylabel('CO2 Emissions (Million Metric Tons)')
 plt.title('Traffic Volume vs CO2 Emissions: WY')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
+
+
+# Perform Linear regression
+
 plt.show()
