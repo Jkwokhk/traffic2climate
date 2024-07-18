@@ -60,7 +60,14 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
-#  Now we find the relationship between CO2 emission and traffic volume
-
-
+#  creating scatterplot to see relationship between traffic volume and CO2 emission
+plt.figure(figsize=(10, 6))
+plt.scatter(wy_emi, wy_volumes, label='WY', color='green')
+plt.scatter(ca_emi, ca_volumes, label='CA', color='blue')
+plt.xlabel('Traffic Volume (Vehicle-Miles in Millions)')
+plt.ylabel('CO2 Emissions (Million Metric Tons)')
+plt.title('Traffic Volume vs CO2 Emissions: WY')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
 plt.show()
