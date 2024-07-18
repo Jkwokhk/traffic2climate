@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
 from scipy import stats
 
 # For convenience purposes I will only compare data between California and Wyoming
@@ -79,18 +80,49 @@ plt.tight_layout()
 
 all_emissions_sorted = sorted(all_emissions)
 all_traffic_data_sorted = sorted(all_traffic_data)
+combined_data = list(zip(all_traffic_data_sorted, all_emissions_sorted))
 
 plt.figure(figsize=(10, 6))
-plt.scatter(all_emissions_sorted, all_traffic_data_sorted, label='All States')
+plt.scatter( all_traffic_data_sorted, all_emissions_sorted, label='All States')
 
 plt.xlabel('Traffic Volume (Vehicle-Miles in Millions)')
 plt.ylabel('CO2 Emissions (Million Metric Tons)')
-plt.title('Traffic Volume vs CO2 Emissions: WY')
+plt.title('Traffic Volume vs CO2 Emissions')
 plt.legend()
 plt.grid(True)
 plt.tight_layout()
 
 
 # Perform Linear regression
+X = np.array(all_traffic_data_sorted).reshape(-1,1)
+y = np.array(all_emissions_sorted)
+
+model = LinearRegression()
+model.fit(X,y)
+y_pred = model.predict(X)
+
+# Finding R^2 and p value 
+# R^2 shows the goodness of fit in the regression model
+#  p value sees if there is a significant linear relationship (lower more significant)
+# Needs to flatten from 2d to 1d because linregress only accepts 1d
+# p value shows result is statistically highly significant
+# r squared shows good fit
+slope, intercept, r_value, p_value, std_err = stats.linregress(X.flatten(), y)
+print(r_value, p_value)
+plt.figure(figsize=(10, 6))
+plt.scatter(X, y, color='blue', label='Actual data')
+plt.plot(X, y_pred, color='red', linewidth=2, label='Linear regression line')
+
+plt.text(0.1, 0.5*max(y) ,f'R-squared: {r_value:.6f}', fontsize=12)
+plt.text( 0.1, 0.6*max(y), f'P-value: {p_value:.6f}', fontsize=12)
+plt.xlabel('Traffic Volume (Vehicle-Miles in Millions)')
+plt.ylabel('CO2 Emissions (in units)')
+plt.title('Linear Regression: Traffic Volume vs CO2 Emissions')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+
+
+
 
 plt.show()
